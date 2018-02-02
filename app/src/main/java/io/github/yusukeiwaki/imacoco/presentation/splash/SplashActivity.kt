@@ -7,10 +7,12 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.iid.FirebaseInstanceId
 import io.github.yusukeiwaki.imacoco.R
 import io.github.yusukeiwaki.imacoco.presentation.base.BaseActivity
 import io.github.yusukeiwaki.imacoco.presentation.base.FirebaseCurrentUserLiveData
 import io.github.yusukeiwaki.imacoco.presentation.overview.OverviewActivity
+import io.github.yusukeiwaki.imacoco.repository.device_registration.DeviceRegistrationManager
 
 class SplashActivity : BaseActivity() {
     companion object {
@@ -36,6 +38,11 @@ class SplashActivity : BaseActivity() {
         FirebaseCurrentUserLiveData(firebaseAuth).observe(this, Observer { currentUser ->
             if (currentUser != null) {
                 proceedToNextActivity()
+                DeviceRegistrationManager(this).updateCurrentUserId(currentUser.uid)
+                FirebaseInstanceId.getInstance().token?.let { token ->
+                    DeviceRegistrationManager(this).updateDeviceToken(token)
+                }
+
             }
         })
         if (firebaseAuth.currentUser == null) {

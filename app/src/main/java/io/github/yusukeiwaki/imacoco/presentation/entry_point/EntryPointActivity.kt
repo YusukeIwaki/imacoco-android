@@ -1,16 +1,22 @@
 package io.github.yusukeiwaki.imacoco.presentation.entry_point
 
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.iid.FirebaseInstanceId
 import io.github.yusukeiwaki.imacoco.presentation.base.BaseNoDisplayActivity
 import io.github.yusukeiwaki.imacoco.presentation.overview.OverviewActivity
 import io.github.yusukeiwaki.imacoco.presentation.splash.SplashActivity
+import io.github.yusukeiwaki.imacoco.repository.device_registration.DeviceRegistrationManager
 
 class EntryPointActivity : BaseNoDisplayActivity() {
     override fun doAction() {
-        if (FirebaseAuth.getInstance().currentUser != null) {
+        FirebaseAuth.getInstance().currentUser?.let { currentUser ->
             startActivity(OverviewActivity.newIntent(this))
-        } else {
+            DeviceRegistrationManager(this).updateCurrentUserId(currentUser.uid)
+        } ?: run {
             startActivity(SplashActivity.newIntent(this))
+        }
+        FirebaseInstanceId.getInstance().token?.let { token ->
+            DeviceRegistrationManager(this).updateDeviceToken(token)
         }
     }
 }
