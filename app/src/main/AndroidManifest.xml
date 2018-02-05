@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="io.github.yusukeiwaki.imacoco">
 
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <application
         android:name=".ImacocoApplication"
         android:allowBackup="true"
@@ -20,6 +23,9 @@
         </activity>
         <activity android:name=".presentation.splash.SplashActivity" />
         <activity android:name=".presentation.overview.OverviewActivity" />
+
+        <activity android:name=".presentation.positioning.PositioningRequirementCheckActivity"/>
+        <service android:name=".presentation.positioning.OneShotPositioningService"/>
 
         <service
             android:name=".fcm.MyFirebaseMessagingService">

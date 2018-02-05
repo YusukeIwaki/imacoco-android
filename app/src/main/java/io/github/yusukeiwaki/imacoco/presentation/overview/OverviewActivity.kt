@@ -10,7 +10,7 @@ import io.github.yusukeiwaki.imacoco.R
 import io.github.yusukeiwaki.imacoco.databinding.ActivityOverviewBinding
 import io.github.yusukeiwaki.imacoco.presentation.base.BaseActivity
 import io.github.yusukeiwaki.imacoco.presentation.base.FirebaseCurrentUserLiveData
-
+import io.github.yusukeiwaki.imacoco.presentation.positioning.PositioningRequirementCheckActivity
 
 class OverviewActivity : BaseActivity() {
     companion object {
@@ -31,5 +31,6 @@ class OverviewActivity : BaseActivity() {
         FirebaseCurrentUserLiveData(FirebaseAuth.getInstance()).observe(this, Observer { currentUser ->
             binding.setCurrentUser(currentUser)
         })
+        startActivity(PositioningRequirementCheckActivity.newIntent(this))
     }
 }
