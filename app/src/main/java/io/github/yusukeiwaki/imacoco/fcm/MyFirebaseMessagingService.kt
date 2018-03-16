@@ -1,6 +1,5 @@
 package io.github.yusukeiwaki.imacoco.fcm
 
-import android.text.TextUtils
 import android.util.Log
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage

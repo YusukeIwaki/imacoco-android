@@ -1,7 +1,6 @@
 package io.github.yusukeiwaki.imacoco.repository.device_registration
 
 import android.content.Context
-import android.text.TextUtils
 
 class DeviceRegistrationManager(private val context: Context) {
 
@@ -27,7 +26,7 @@ class DeviceRegistrationManager(private val context: Context) {
     private fun onUpdate() {
         val uid = cache.uid
         val token = cache.token
-        if (!TextUtils.isEmpty(uid) && !TextUtils.isEmpty(token)) {
+        if (!uid.isNullOrBlank() && !token.isNullOrBlank()) {
             DeviceRegistrationWorker(uid!!, token!!).perform()
         }
     }
