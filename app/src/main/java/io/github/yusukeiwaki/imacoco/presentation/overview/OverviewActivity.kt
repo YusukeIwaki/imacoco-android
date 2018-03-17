@@ -5,12 +5,13 @@ import android.content.Context
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
-import com.google.firebase.auth.FirebaseAuth
 import io.github.yusukeiwaki.imacoco.R
 import io.github.yusukeiwaki.imacoco.databinding.ActivityOverviewBinding
 import io.github.yusukeiwaki.imacoco.presentation.base.BaseActivity
-import io.github.yusukeiwaki.imacoco.presentation.base.FirebaseCurrentUserLiveData
 import io.github.yusukeiwaki.imacoco.presentation.positioning.PositioningRequirementCheckActivity
+import io.github.yusukeiwaki.imacoco.repository.current_user.CurrentUserManager
+import io.github.yusukeiwaki.imacoco.repository.device_registration.DeviceRegistrationManager
+import io.github.yusukeiwaki.imacoco.repository.location_log.LocationLogManager
 
 class OverviewActivity : BaseActivity() {
     companion object {
@@ -26,9 +27,13 @@ class OverviewActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_overview)
         binding.btnLogout.setOnClickListener { _ ->
-            FirebaseAuth.getInstance().signOut()
+            CurrentUserManager().firebaseCurrentUser?.let { currentUser ->
+                DeviceRegistrationManager(this@OverviewActivity).unregister(currentUser.uid)
+                LocationLogManager().clear(currentUser.uid)
+                CurrentUserManager().logout()
+            }
         }
-        FirebaseCurrentUserLiveData(FirebaseAuth.getInstance()).observe(this, Observer { currentUser ->
+        CurrentUserManager().firebaseCurrentUserAsLiveData().observe(this, Observer { currentUser ->
             binding.setCurrentUser(currentUser)
         })
         startActivity(PositioningRequirementCheckActivity.newIntent(this))

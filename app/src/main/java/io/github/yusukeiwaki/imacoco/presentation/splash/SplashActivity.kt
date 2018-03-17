@@ -6,12 +6,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.iid.FirebaseInstanceId
 import io.github.yusukeiwaki.imacoco.R
 import io.github.yusukeiwaki.imacoco.presentation.base.BaseActivity
-import io.github.yusukeiwaki.imacoco.presentation.base.FirebaseCurrentUserLiveData
 import io.github.yusukeiwaki.imacoco.presentation.overview.OverviewActivity
+import io.github.yusukeiwaki.imacoco.repository.current_user.CurrentUserManager
 import io.github.yusukeiwaki.imacoco.repository.device_registration.DeviceRegistrationManager
 
 class SplashActivity : BaseActivity() {
@@ -34,8 +33,8 @@ class SplashActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
-        val firebaseAuth = FirebaseAuth.getInstance()
-        FirebaseCurrentUserLiveData(firebaseAuth).observe(this, Observer { currentUser ->
+        val currentUserManager = CurrentUserManager()
+        currentUserManager.firebaseCurrentUserAsLiveData().observe(this, Observer { currentUser ->
             if (currentUser != null) {
                 proceedToNextActivity()
                 DeviceRegistrationManager(this).updateCurrentUserId(currentUser.uid)
@@ -45,8 +44,8 @@ class SplashActivity : BaseActivity() {
 
             }
         })
-        if (firebaseAuth.currentUser == null) {
-            firebaseAuth.signInAnonymously()
+        if (currentUserManager.firebaseCurrentUser == null) {
+            currentUserManager.login()
                     .addOnCompleteListener(this, { task ->
                         if (!task.isSuccessful) {
                             Log.w(TAG, "auth failure", task.exception)

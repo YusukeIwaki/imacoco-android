@@ -1,7 +1,8 @@
 package io.github.yusukeiwaki.imacoco.repository.location_log
 
 import android.location.Location
-import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
+import io.github.yusukeiwaki.imacoco.repository.current_user.CurrentUserManager
 
 class LocationLogManager {
     fun updateLastLocation(location: Location) {
@@ -11,8 +12,16 @@ class LocationLogManager {
                 accuracy = location.accuracy.toDouble(),
                 timestampMs = location.time
         )
-        FirebaseAuth.getInstance().currentUser?.let { currentUser ->
-            LastLocationLogUploadWorker(currentUser.uid, lastLocationLog).perform()
+        CurrentUserManager().firebaseCurrentUser?.let { currentUser ->
+            upload(currentUser.uid, lastLocationLog)
         }
     }
+
+    private fun upload(uid: String, lastLocationLog: LastLocationLog) =
+            FirebaseDatabase.getInstance().reference
+                    .child("public").child("users").child(uid).child("last_location").setValue(lastLocationLog)
+
+    fun clear(uid: String) =
+            FirebaseDatabase.getInstance().reference
+                    .child("public").child("users").child(uid).removeValue()
 }
