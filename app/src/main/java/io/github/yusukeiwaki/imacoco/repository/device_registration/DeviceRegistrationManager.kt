@@ -34,7 +34,7 @@ class DeviceRegistrationManager(private val context: Context) {
     }
 
     private fun register(uid: String, token: String) =
-            FirebaseDatabase.getInstance().reference.child("users").child(uid).child("token").setValue(token)
+            FirebaseDatabase.getInstance().reference.child("users").child(uid).child("fcm_token").setValue(token)
 
     fun unregister(uid: String): Task<Void> {
         cache().uid = null
