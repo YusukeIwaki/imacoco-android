@@ -56,11 +56,11 @@ class SplashActivity : BaseActivity() {
     }
 
     private fun proceedToNextActivity() {
+        finish()
         if (nextIntent == null) {
             startActivity(OverviewActivity.newIntent(this))
         } else {
             startActivity(nextIntent)
         }
-        finish()
     }
 }

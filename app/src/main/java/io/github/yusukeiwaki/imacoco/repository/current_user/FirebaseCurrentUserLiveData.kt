@@ -5,7 +5,7 @@ import com.google.firebase.auth.FirebaseAuth
 
 import com.google.firebase.auth.FirebaseUser
 
-class FirebaseCurrentUserLiveData : LiveData<FirebaseUser>() {
+class FirebaseCurrentUserLiveData : LiveData<FirebaseUser?>() {
     private val firebaseAuth by lazy { FirebaseAuth.getInstance() }
     private var currentUser: FirebaseUser? = null
     private val firebaseAuthStateListener = FirebaseAuth.AuthStateListener { firebaseAuth ->
