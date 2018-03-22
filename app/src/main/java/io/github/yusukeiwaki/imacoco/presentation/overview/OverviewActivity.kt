@@ -34,7 +34,7 @@ class OverviewActivity : BaseActivity() {
         // ログアウトボタン
         binding.toolbar.inflateMenu(R.menu.activity_overview)
         binding.toolbar.menu.findItem(R.id.logout).setOnMenuItemClickListener {
-            viewModel.logout(this)
+            viewModel.logout()
             true
         }
         logoutProgressDialog = ProgressDialog(this).also { dialog ->

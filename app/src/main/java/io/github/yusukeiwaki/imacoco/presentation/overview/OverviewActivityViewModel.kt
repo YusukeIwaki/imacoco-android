@@ -3,7 +3,6 @@ package io.github.yusukeiwaki.imacoco.presentation.overview
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import android.content.Context
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import io.github.yusukeiwaki.imacoco.presentation.base.ProgressState
@@ -20,11 +19,11 @@ class OverviewActivityViewModel : ViewModel() {
         logoutState.postValue(null)
     }
 
-    fun logout(context: Context) {
+    fun logout() {
         CurrentUserManager().firebaseCurrentUser?.let { currentUser ->
             logoutState.postValue(ProgressState.ofProgress())
             val beforeLogout = Tasks.whenAllComplete(setOf<Task<Void>>(
-                    DeviceRegistrationManager(context).unregister(currentUser.uid),
+                    DeviceRegistrationManager().unregister(currentUser.uid),
                     LocationLogManager().clear(currentUser.uid)))
             beforeLogout.addOnCompleteListener{
                 CurrentUserManager().logout()

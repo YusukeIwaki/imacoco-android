@@ -1,33 +1,18 @@
 package io.github.yusukeiwaki.imacoco.repository.device_registration
 
-import android.content.Context
 import com.google.android.gms.tasks.Task
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.iid.FirebaseInstanceId
+import io.github.yusukeiwaki.imacoco.repository.current_user.CurrentUserManager
 
-class DeviceRegistrationManager(private val context: Context) {
-
-    private fun cache() = DeviceRegistrationCache(context)
-
-    /**
-     * Anonymous userが取得できたときに呼ばれる
-     */
-    fun updateCurrentUserId(uid: String) {
-        cache().uid = uid
-        onUpdate()
-    }
+class DeviceRegistrationManager {
 
     /**
-     * FCMトークンがアップデートされたときに呼ばれる
+     * FCMトークン更新時 or ログインUserのuid更新時に呼ぶ
      */
-    fun updateDeviceToken(token: String) {
-        cache().token = token
-        onUpdate()
-    }
-
-    private fun onUpdate() {
-        val cache = cache()
-        val uid = cache.uid
-        val token = cache.token
+    fun scheduleRegister() {
+        val uid = CurrentUserManager().firebaseCurrentUser?.uid
+        val token = FirebaseInstanceId.getInstance().token
         if (!uid.isNullOrBlank() && !token.isNullOrBlank()) {
             register(uid!!, token!!)
         }
@@ -37,7 +22,6 @@ class DeviceRegistrationManager(private val context: Context) {
             FirebaseDatabase.getInstance().reference.child("users").child(uid).child("fcm_token").setValue(token)
 
     fun unregister(uid: String): Task<Void> {
-        cache().uid = null
         return FirebaseDatabase.getInstance().reference.child("users").child(uid).removeValue()
     }
 }

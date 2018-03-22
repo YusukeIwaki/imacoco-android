@@ -6,7 +6,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import com.google.firebase.iid.FirebaseInstanceId
 import io.github.yusukeiwaki.imacoco.R
 import io.github.yusukeiwaki.imacoco.presentation.base.BaseActivity
 import io.github.yusukeiwaki.imacoco.presentation.overview.OverviewActivity
@@ -37,11 +36,7 @@ class SplashActivity : BaseActivity() {
         currentUserManager.firebaseCurrentUserAsLiveData().observe(this, Observer { currentUser ->
             if (currentUser != null) {
                 proceedToNextActivity()
-                DeviceRegistrationManager(this).updateCurrentUserId(currentUser.uid)
-                FirebaseInstanceId.getInstance().token?.let { token ->
-                    DeviceRegistrationManager(this).updateDeviceToken(token)
-                }
-
+                DeviceRegistrationManager().scheduleRegister()
             }
         })
         if (currentUserManager.firebaseCurrentUser == null) {

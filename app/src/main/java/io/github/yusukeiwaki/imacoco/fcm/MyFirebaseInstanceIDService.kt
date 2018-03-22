@@ -21,6 +21,6 @@ class MyFirebaseInstanceIDService : FirebaseInstanceIdService() {
     }
 
     private fun sendRegistrationToServer(token: String) {
-        DeviceRegistrationManager(this).updateDeviceToken(token)
+        DeviceRegistrationManager().scheduleRegister()
     }
 }
