@@ -1,3 +1,2 @@
 include ':app'
-include ':launcher_icon'
 include ':oneshot_positioning'

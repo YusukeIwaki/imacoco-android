@@ -57,12 +57,13 @@ class OverviewActivity : BaseActivity() {
 
         // 共有URL
         CurrentUserManager().shareUrlAsLiveData().observe(this, Observer { url ->
-            if (url.isNullOrBlank()) {
-                binding.shareUrl = "取得中..."
-            } else {
-                binding.shareUrl = url
-            }
+            binding.shareUrl = url
         })
+        binding.shareButton.setOnClickListener {
+            binding.shareUrl?.let { url ->
+                share(url)
+            }
+        }
 
         // 測位のパーミッション確認
         startActivity(PositioningRequirementCheckActivity.newIntent(this))
@@ -95,5 +96,14 @@ class OverviewActivity : BaseActivity() {
     override fun onStop() {
         showOrHideLogoutProgress(false)
         super.onStop()
+    }
+
+    private fun share(url: String) {
+        val baseIntent = Intent(Intent.ACTION_SEND).also { intent ->
+            intent.setType("text/plain")
+            intent.putExtra(Intent.EXTRA_TEXT, url)
+        }
+        val chooserIntent = Intent.createChooser(baseIntent, "URLを共有")
+        startActivity(chooserIntent)
     }
 }

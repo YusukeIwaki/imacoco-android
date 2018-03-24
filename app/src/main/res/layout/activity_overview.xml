@@ -3,7 +3,7 @@
 
     <data>
 
-        <import type="android.view.View"/>
+        <import type="io.github.yusukeiwaki.imacoco.R"/>
 
         <variable
             name="shareUrl"
@@ -33,40 +33,42 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
                 android:text="この端末の位置をあらわすURL"
-                android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                android:layout_marginBottom="16dp"/>
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
 
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/share_background"
                 android:minHeight="48dp"
-                android:padding="8dp"
-                android:background="@drawable/share_background">
+                android:padding="8dp">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    android:text="@{shareUrl}"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                    android:text="@{(shareUrl.length > 0) ? shareUrl : `取得中`}"
+                    android:textAppearance="@{shareUrl.length > 24 ? R.style.TextAppearance_AppCompat_Caption : R.style.TextAppearance_AppCompat_Body2 }"
                     tools:text="https://imacoco.cloudfunctions.net/functions/requestPositioning?uid=xxx"/>
             </FrameLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
+            <Button
+                android:id="@+id/share_button"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="tap to share"
-                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                android:enabled="false"/>
+                android:enabled="@{shareUrl.length > 0}"
+                android:text="URLを共有"/>
         </LinearLayout>
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="?attr/actionBarSize"
-            android:background="@android:color/transparent"/>
+            android:background="@android:color/transparent"
+            android:minHeight="?attr/actionBarSize"/>
 
     </FrameLayout>
 </layout>
